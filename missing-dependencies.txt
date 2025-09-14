@@ -1,0 +1,35 @@
+# Missing Dependencies for Liquid Glass Crypto Fantasy App
+
+## Liquid Glass UI
+- expo-glass-effect
+- @expo/ui
+- @callstack/liquid-glass
+
+## Web3 Integration
+- @reown/appkit-wagmi-react-native
+- wagmi
+- viem
+- ethers
+- @tanstack/react-query
+- @react-native-async-storage/async-storage
+
+## Backend & APIs
+- @supabase/supabase-js
+- axios
+- @nktkas/hyperliquid
+
+## UI & Navigation
+- react-native-vector-icons
+- @rneui/themed
+
+## Charts & Data Visualization
+- react-native-chart-kit
+- react-native-svg
+
+## State Management
+- zustand
+
+## Utilities
+- date-fns
+- react-hook-form
+- react-native-url-polyfill
