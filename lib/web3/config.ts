@@ -2,8 +2,8 @@ import '@walletconnect/react-native-compat';
 import { createAppKit, defaultWagmiConfig } from '@reown/appkit-wagmi-react-native';
 import { mainnet, arbitrum, polygon, baseSepolia, bscTestnet } from '@reown/appkit/networks';
 
-// Note: In a real implementation, you would use environment variables
-const projectId = 'your_reown_project_id';
+// Use Expo environment variables (EXPO_PUBLIC_ prefix)
+const projectId = process.env.EXPO_PUBLIC_REOWN_PROJECT_ID || 'your_reown_project_id';
 
 const metadata = {
   name: 'Liquid Glass Crypto Fantasy',

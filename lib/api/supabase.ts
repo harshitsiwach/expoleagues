@@ -1,19 +1,76 @@
-import 'react-native-url-polyfill/auto';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@supabase/supabase-js';
+// Mock storage for web environment
+const createMockStorage = () => {
+  let store = {};
+  
+  return {
+    getItem: (key) => {
+      return Promise.resolve(store[key] || null);
+    },
+    setItem: (key, value) => {
+      store[key] = value;
+      return Promise.resolve();
+    },
+    removeItem: (key) => {
+      delete store[key];
+      return Promise.resolve();
+    },
+    clear: () => {
+      store = {};
+      return Promise.resolve();
+    }
+  };
+};
 
-// Note: In a real implementation, you would use environment variables
-const supabaseUrl = 'https://your-supabase-url.supabase.co';
-const supabaseAnonKey = 'your-supabase-anon-key';
+// Use environment variables
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || 'https://your-supabase-url.supabase.co';
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'your-supabase-anon-key';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: AsyncStorage,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
-  },
-});
+// Check if we're in a web environment
+const isWeb = typeof window === 'undefined';
+
+// Use mock storage for web, real storage for native
+let storage;
+try {
+  if (isWeb) {
+    storage = createMockStorage();
+  } else {
+    const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+    storage = AsyncStorage;
+  }
+} catch (error) {
+  console.warn('AsyncStorage not available, using mock storage');
+  storage = createMockStorage();
+}
+
+// Create Supabase client
+let supabase;
+try {
+  const { createClient } = require('@supabase/supabase-js');
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      storage: storage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
+  });
+} catch (error) {
+  console.warn('Supabase client creation failed:', error);
+  supabase = {
+    auth: {
+      getSession: () => Promise.resolve(null),
+      signInWithPassword: () => Promise.reject(new Error('Supabase not available')),
+      signUp: () => Promise.reject(new Error('Supabase not available')),
+      signOut: () => Promise.resolve(),
+    },
+    from: () => ({
+      select: () => Promise.resolve({ data: null, error: new Error('Supabase not available') }),
+      insert: () => Promise.resolve({ data: null, error: new Error('Supabase not available') }),
+    }),
+  };
+}
+
+export { supabase };
 
 // Mock database helper functions
 export const saveTeamToDatabase = async (
@@ -59,7 +116,7 @@ export const saveTeamToDatabase = async (
     team_id_from_contract: teamIdFromContract || null
   };
 
-  console.log('Team data being sent to Supabase:', teamData);
+  console.log('Team data being sent to database:', teamData);
 
   // Mock successful insertion
   const newTeam = {
@@ -84,7 +141,7 @@ export const saveTeamToDatabase = async (
     team_id_from_contract: teamIdFromContract || null
   }));
 
-  console.log('Team tokens data being sent to Supabase:', teamTokensData);
+  console.log('Team tokens data being sent to database:', teamTokensData);
 
   // Mock successful insertion
   const insertedTokens = teamTokensData.map((token, index) => ({

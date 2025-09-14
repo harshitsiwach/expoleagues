@@ -6,6 +6,7 @@ import { GlassView } from '@/components/ui/GlassView';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { TokensTable } from '@/components/trading/TokensTable';
 import { HyperliquidData } from '@/components/trading/HyperliquidData';
+import { WalletConnect } from '@/components/web3/WalletConnect';
 import { useFantasyContract } from '@/lib/web3/contracts';
 import { coinGeckoAPI } from '@/lib/api/coingecko';
 import { saveTeamToDatabase } from '@/lib/api/supabase';
@@ -184,6 +185,9 @@ Transaction: ${result.transactionHash}`
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
         <GlassView style={styles.glassContainer}>
+          {/* Wallet Connect */}
+          <WalletConnect />
+          
           {/* Hero Section */}
           <View style={styles.heroSection}>
             <Text style={styles.heroTitle}>Make your Dream Team</Text>

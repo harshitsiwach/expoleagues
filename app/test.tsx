@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function MyTeamsScreen() {
+export default function TestScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>My Teams</Text>
-        <Text style={styles.subtitle}>View and manage your fantasy teams</Text>
+        <Text style={styles.title}>App Setup Test</Text>
+        <Text style={styles.subtitle}>If you can see this, the basic setup is working!</Text>
       </View>
     </SafeAreaView>
   );
